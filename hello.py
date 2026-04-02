@@ -13,6 +13,11 @@ def home():
     return jsonify({"message": "API is running"})
 
 
+@app.route("/health")
+def health():
+    return {"status": "ok"}, 200
+
+
 @app.route("/add", methods=["GET"])
 def add_route():
     try:
