@@ -20,7 +20,7 @@ def add_route():
         y = float(request.args.get("y"))
         result = add(x, y)
         return jsonify({"result": result})
-    except Exception as e:
+    except (ValueError, TypeError) as e:
         return jsonify({"error": str(e)}), 400
 
 
