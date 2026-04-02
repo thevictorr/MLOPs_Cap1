@@ -1,6 +1,28 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+
 def add(x, y):
     """This is an add function"""
     return x + y
 
 
-print(add(1, 1))
+@app.route("/")
+def home():
+    return jsonify({"message": "API is running"})
+
+
+@app.route("/add", methods=["GET"])
+def add_route():
+    try:
+        x = float(request.args.get("x"))
+        y = float(request.args.get("y"))
+        result = add(x, y)
+        return jsonify({"result": result})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080)

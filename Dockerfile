@@ -8,4 +8,6 @@ COPY . .
 
 RUN make install
 
+EXPOSE 8080
+
 CMD ["python", "hello.py"]
