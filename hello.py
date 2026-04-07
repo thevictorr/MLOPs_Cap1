@@ -10,7 +10,7 @@ def add(x, y):
 
 @app.route("/")
 def home():
-    return jsonify({"message": "API is running"})
+    return jsonify({"message": "API is running 2"})
 
 
 @app.route("/health")
