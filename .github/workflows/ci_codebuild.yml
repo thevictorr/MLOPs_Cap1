@@ -47,5 +47,31 @@ jobs:
 
       - name: Start CodeBuild
         run: |
-          aws codebuild start-build \
-            --project-name ${{ secrets.CODEBUILD_PROJECT_NAME }}
+          BUILD_ID=$(aws codebuild start-build \
+            --project-name ${{ secrets.CODEBUILD_PROJECT_NAME }} \
+            --source-version ${{ github.sha }} \
+            --environment-variables-override \
+              name=IMAGE_TAG,value=${{ github.sha }},type=PLAINTEXT \
+            --query 'build.id' \
+            --output text)
+
+          echo "CodeBuild ID: $BUILD_ID"
+
+          while true; do
+            STATUS=$(aws codebuild batch-get-builds \
+              --ids "$BUILD_ID" \
+              --query 'builds[0].buildStatus' \
+              --output text)
+
+            echo "Current CodeBuild status: $STATUS"
+
+            if [ "$STATUS" = "SUCCEEDED" ]; then
+              exit 0
+            fi
+
+            if [ "$STATUS" = "FAILED" ] || [ "$STATUS" = "FAULT" ] || [ "$STATUS" = "STOPPED" ] || [ "$STATUS" = "TIMED_OUT" ]; then
+              exit 1
+            fi
+
+            sleep 15
+          done

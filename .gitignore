@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.pyc
+.coverage
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Env
+.env
+
+# OS
+.DS_Store
